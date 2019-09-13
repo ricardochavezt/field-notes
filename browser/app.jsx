@@ -2,6 +2,7 @@ const hyperdom = require('hyperdom')
 const styles = require('./styles.css')
 const Note = require('./Note.jsx')
 const org = require('org')
+const urlParse = require('url-parse')
 
 module.exports = class App {
     constructor () {
@@ -25,6 +26,17 @@ module.exports = class App {
 
         let links  = JSON.parse(localStorage["links"] || "[]")
         this.links = links.map((link, i) => new Note({id: i, content: link}, this.updateLink))
+
+        let url = urlParse(location.href, true)
+        if (url.query.link) {
+            this.activeTab = "links"
+            if (url.query.title) {
+                this.newLinkText = `[${url.query.title}](${url.query.link})`
+            }
+            else {
+                this.newLinkText = `<${url.query.link}>`
+            }
+        }
     }
 
     addNote() {

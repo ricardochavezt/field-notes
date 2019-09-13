@@ -28,6 +28,7 @@
     "semantic-ui-css": "latest",
     "style-loader": "latest",
     "uglifyjs-webpack-plugin": "latest",
+    "url-parse": "^1.4.7",
     "webpack": "latest",
     "webpack-cli": "latest",
     "webpack-manifest-plugin": "latest"
