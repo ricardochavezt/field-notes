@@ -1,0 +1,19 @@
+{
+  "sourceType": "script",
+  "presets": [
+    "hyperdom"
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "useBuiltIns": "usage",
+            "corejs": 3
+          }
+        ]
+      ]
+    }
+  }
+}

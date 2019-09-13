@@ -1,0 +1,15 @@
+main {
+    padding: 2em 0;
+}
+
+.hello {
+  text-transform: uppercase;
+}
+
+.content {
+    padding: 1em 0;
+}
+
+:global(span.task-status) {
+    background-color: green
+}
