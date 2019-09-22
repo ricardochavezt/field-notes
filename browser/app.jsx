@@ -20,30 +20,37 @@ module.exports = class App {
     }
 
     onload() {
-        let notes = store.getNotes()
-        this.notes = notes.map((note, i) => new Note({id: i, content: note}, this.updateNote))
+        let getNotes = store.getNotes().then((notes) => {
+            this.notes = notes.map(note => new Note(note , this.updateNote))
+        });
 
-        this.todayContent = store.getToday()
+        let getToday = store.getToday().then((todayContent) => {
+            this.todayContent = todayContent
+        });
 
-        let links  = store.getLinks()
-        this.links = links.map((link, i) => new Note({id: i, content: link}, this.updateLink))
+        let getLinks = store.getLinks().then((links) => {
+            this.links = links.map(link => new Note(link , this.updateLink))
+        });
 
-        let url = urlParse(location.href, true)
-        if (url.query.link) {
-            this.activeTab = "links"
-            if (url.query.title) {
-                this.newLinkText = `[${url.query.title}](${url.query.link})`
+        return Promise.all(getNotes, getToday, getLinks).then(values => {
+            let url = urlParse(location.href, true)
+            if (url.query.link) {
+                this.activeTab = "links"
+                if (url.query.title) {
+                    this.newLinkText = `[${url.query.title}](${url.query.link})`
+                }
+                else {
+                    this.newLinkText = `<${url.query.link}>`
+                }
             }
-            else {
-                this.newLinkText = `<${url.query.link}>`
-            }
-        }
+        });
     }
 
     addNote() {
-        let newNote = store.insertNote(this.newNoteText)
-        this.newNoteText = ""
-        this.notes.unshift(new Note(newNote, this.updateNote))
+        store.insertNote(this.newNoteText).then((newNote) => {
+            this.newNoteText = ""
+            this.notes.unshift(new Note(newNote, this.updateNote))
+        });
     }
 
     updateNote(note) {
@@ -107,14 +114,16 @@ module.exports = class App {
     }
 
     saveToday() {
-        store.updateToday(this.todayContent)
-        this.editingToday = false
+        store.updateToday(this.todayContent).then(() => {
+            this.editingToday = false
+        });
     }
 
     addLink() {
-        let newLink = store.insertLink(this.newLinkText)
-        this.newLinkText = ""
-        this.links.unshift(new Note(newLink, this.updateLink))
+        store.insertLink(this.newLinkText).then((newLink) => {
+            this.newLinkText = ""
+            this.links.unshift(new Note(newLink, this.updateLink))
+        });
     }
 
     updateLink(link) {
