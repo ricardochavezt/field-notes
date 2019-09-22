@@ -42,6 +42,6 @@ module.exports = class Note {
         if (this.saveHandler) {
             this.saveHandler(this.note)
         }
-        this.toggleEditMode()
+        this.editMode = false
     }
 }

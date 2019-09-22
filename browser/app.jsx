@@ -3,6 +3,7 @@ const styles = require('./styles.css')
 const Note = require('./Note.jsx')
 const org = require('org')
 const urlParse = require('url-parse')
+const store = require('./store')
 
 module.exports = class App {
     constructor () {
@@ -19,12 +20,12 @@ module.exports = class App {
     }
 
     onload() {
-        let notes = JSON.parse(localStorage["notes"] || "[]")
+        let notes = store.getNotes()
         this.notes = notes.map((note, i) => new Note({id: i, content: note}, this.updateNote))
 
-        this.todayContent = localStorage["today"] || ""
+        this.todayContent = store.getToday()
 
-        let links  = JSON.parse(localStorage["links"] || "[]")
+        let links  = store.getLinks()
         this.links = links.map((link, i) => new Note({id: i, content: link}, this.updateLink))
 
         let url = urlParse(location.href, true)
@@ -40,19 +41,13 @@ module.exports = class App {
     }
 
     addNote() {
-        let newNote = this.newNoteText
+        let newNote = store.insertNote(this.newNoteText)
         this.newNoteText = ""
-        this.notes.unshift(new Note({id: this.notes.length, content: newNote}, this.updateNote))
-
-        let notes = JSON.parse(localStorage["notes"] || "[]")
-        notes.unshift(newNote)
-        localStorage["notes"] = JSON.stringify(notes)
+        this.notes.unshift(new Note(newNote, this.updateNote))
     }
 
     updateNote(note) {
-        let notes = JSON.parse(localStorage["notes"] || "[]")
-        notes[note.id] = note.content
-        localStorage["notes"] = JSON.stringify(notes)
+        store.updateNote(note)
     }
 
     renderNotes() {
@@ -112,24 +107,18 @@ module.exports = class App {
     }
 
     saveToday() {
-        localStorage["today"] = this.todayContent
+        store.updateToday(this.todayContent)
         this.editingToday = false
     }
 
     addLink() {
-        let newLink = this.newLinkText
+        let newLink = store.insertLink(this.newLinkText)
         this.newLinkText = ""
-        this.links.unshift(new Note({id: this.links.length, content: newLink}, this.updateLink))
-
-        let links  = JSON.parse(localStorage["links"] || "[]")
-        links.unshift(newLink)
-        localStorage["links"] = JSON.stringify(links)
+        this.links.unshift(new Note(newLink, this.updateLink))
     }
 
     updateLink(link) {
-        let links  = JSON.parse(localStorage["links"] || "[]")
-        links[link.id] = link.content
-        localStorage["links"] = JSON.stringify(links)
+        store.updateLink(link)
     }
 
     renderLinks() {
