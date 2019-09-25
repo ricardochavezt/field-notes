@@ -25,6 +25,7 @@
     "morgan": "latest",
     "optimize-css-assets-webpack-plugin": "latest",
     "org": "^0.2.0",
+    "pouchdb": "^7.1.1",
     "semantic-ui-css": "latest",
     "style-loader": "latest",
     "uglifyjs-webpack-plugin": "latest",

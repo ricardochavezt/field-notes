@@ -32,7 +32,7 @@ module.exports = class App {
             this.links = links.map(link => new Note(link , this.updateLink))
         });
 
-        return Promise.all(getNotes, getToday, getLinks).then(values => {
+        return Promise.all([getNotes, getToday, getLinks]).then(values => {
             let url = urlParse(location.href, true)
             if (url.query.link) {
                 this.activeTab = "links"
@@ -114,7 +114,7 @@ module.exports = class App {
     }
 
     saveToday() {
-        store.updateToday(this.todayContent).then(() => {
+        return store.updateToday(this.todayContent).then(() => {
             this.editingToday = false
         });
     }

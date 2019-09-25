@@ -1,3 +1,13 @@
+const PouchDB = require('pouchdb').default;
+
+let db;
+function getDB() {
+    if (!db) {
+        db = new PouchDB("http://localhost:5984/field_notes");
+    }
+    return db;
+}
+
 module.exports = {
     getNotes() {
         return new Promise((resolve, reject) => {
@@ -18,8 +28,8 @@ module.exports = {
     },
 
     getToday() {
-        return new Promise((resolve, reject) => {
-            resolve(localStorage["today"] || "");
+        return getDB().get("today").then((doc) => {
+            return doc.content;
         });
     },
 
@@ -42,9 +52,9 @@ module.exports = {
     },
 
     updateToday(content) {
-        return new Promise((resolve, reject) => {
-            localStorage["today"] = content;
-            resolve();
+        return getDB().get("today").then((doc) => {
+            let newDoc = {...doc, content: content};
+            return getDB().put(newDoc);
         });
     },
 
