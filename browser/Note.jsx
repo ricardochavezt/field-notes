@@ -40,7 +40,9 @@ module.exports = class Note {
 
     saveNote() {
         if (this.saveHandler) {
-            this.saveHandler(this.note)
+            this.saveHandler(this.note).then(note => {
+                this.note = note
+            });
         }
         this.editMode = false
     }
