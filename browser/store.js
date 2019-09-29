@@ -10,21 +10,13 @@ function getDB() {
 
 module.exports = {
     getNotes() {
-        return new Promise((resolve, reject) => {
-            let notes = JSON.parse(localStorage["notes"] || "[]").map((note, i) => {
-                return {id: i, content: note};
-            });
-            resolve(notes);
-        });
+        return getDB().query('field_notes/notes', {include_docs: true, descending: true})
+            .then(res => res.rows.map(row =>row.doc));
     },
 
     getLinks() {
-        return new Promise((resolve, reject) => {
-            let links = JSON.parse(localStorage["links"] || "[]").map((note, i) => {
-                return {id: i, content: note};
-            });
-            resolve(links);
-        });
+        return getDB().query('field_notes/links', {include_docs: true, descending: true})
+            .then(res => res.rows.map(row =>row.doc));
     },
 
     getToday() {
@@ -34,20 +26,20 @@ module.exports = {
     },
 
     insertNote(noteContent) {
-        return new Promise((resolve, reject) => {
-            let notes = JSON.parse(localStorage["notes"] || "[]");
-            notes.unshift(noteContent);
-            localStorage["notes"] = JSON.stringify(notes);
-            resolve({id: notes.length, content: noteContent});
+        let newNote = {
+            content: noteContent,
+            created_at: new Date().toISOString(),
+            kind: 'note'
+        };
+        return getDB().post(newNote).then((newDoc) => {
+            return {...newNote, id: newDoc.id, _rev: newDoc.rev};
         });
     },
 
     updateNote(note) {
-        return new Promise((resolve, reject) => {
-            let notes = JSON.parse(localStorage["notes"] || "[]");
-            notes[note.id] = note.content;
-            localStorage["notes"] = JSON.stringify(notes);
-            resolve();
+        note.updated_at = new Date().toISOString();
+        return getDB().put(note).then((doc) => {
+            return {...note, _rev: doc.rev};
         });
     },
 
@@ -59,20 +51,20 @@ module.exports = {
     },
 
     insertLink(linkContent) {
-        return new Promise((resolve, reject) => {
-            let links  = JSON.parse(localStorage["links"] || "[]");
-            links.unshift(linkContent);
-            localStorage["links"] = JSON.stringify(links);
-            resolve({id: links.length, content: linkContent});
+        let newLink = {
+            content: linkContent,
+            created_at: new Date().toISOString(),
+            kind: 'link'
+        };
+        return getDB().post(newLink).then((newDoc) => {
+            return {...newLink, id: newDoc.id, _rev: newDoc.rev};
         });
     },
 
     updateLink(link) {
-        return new Promise((resolve, reject) => {
-            let links  = JSON.parse(localStorage["links"] || "[]");
-            links[link.id] = link.content;
-            localStorage["links"] = JSON.stringify(links);
-            resolve();
+        link.updated_at = new Date().toISOString();
+        return getDB().put(link).then((doc) => {
+            return {...link, _rev: doc.rev};
         });
     }
 }

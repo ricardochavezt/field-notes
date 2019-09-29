@@ -47,14 +47,15 @@ module.exports = class App {
     }
 
     addNote() {
-        store.insertNote(this.newNoteText).then((newNote) => {
+        return store.insertNote(this.newNoteText).then((newNote) => {
+            console.log(newNote)
             this.newNoteText = ""
             this.notes.unshift(new Note(newNote, this.updateNote))
         });
     }
 
     updateNote(note) {
-        store.updateNote(note)
+        return store.updateNote(note)
     }
 
     renderNotes() {
@@ -120,14 +121,14 @@ module.exports = class App {
     }
 
     addLink() {
-        store.insertLink(this.newLinkText).then((newLink) => {
+        return store.insertLink(this.newLinkText).then((newLink) => {
             this.newLinkText = ""
             this.links.unshift(new Note(newLink, this.updateLink))
         });
     }
 
     updateLink(link) {
-        store.updateLink(link)
+        return store.updateLink(link)
     }
 
     renderLinks() {
