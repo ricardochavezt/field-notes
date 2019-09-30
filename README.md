@@ -1,8 +1,10 @@
-# personal-notes
+# FIELD NOTES online
 
-## Description
+Este es un intento de crear mi propio gestor de notas y enlaces. He usado un montón de gestores de notas y enlaces
+a lo largo del tiempo, y al final nunca recuerdo donde apunté algo, así que estoy intentando con un sitio propio,
+que además me permitiría tener control sobre dónde almaceno los datos.
 
-This is personal-notes.
+Está hecho en base al gran proyecto [hyperdom](https://hyperdom.org/#/), cuyas instrucciones vienen debajo:
 
 ## Usage
 
