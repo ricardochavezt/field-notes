@@ -3,6 +3,7 @@ const PouchDB = require('pouchdb').default;
 let db;
 function getDB() {
     if (!db) {
+        //db = new PouchDB("https://fc8a73a8-0aef-40f2-833f-25e7a9c11376-bluemix:4c9d6c96cea509b8406d7f8a4b18616eb8db225376bfaaeff03aaa2aace24a9f@fc8a73a8-0aef-40f2-833f-25e7a9c11376-bluemix.cloudant.com/field_notes");
         db = new PouchDB("http://localhost:5984/field_notes");
     }
     return db;
