@@ -16,4 +16,4 @@ function register (doRegister) {
 }
 
 // change false -> true to enable service worker
-register(false)
+register(true)
